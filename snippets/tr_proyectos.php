@@ -1,4 +1,3 @@
-
 <?php
 /*
  * Sistema: Gestión de Horas
@@ -12,17 +11,8 @@ require_once __DIR__."/../common/PDOProyectos.php";
 
 
 function tr_proyectos($pdo = null, $limit = 100, $page = 1, $filters = []){
-	$TD_ACCIONES = (
-		$GLOBALS["esUsrJefe"]? 
-			(	
-				'<button class="btn btn-primary btn-edit no-border b-rad-0 third-width" type="button" data-toggle="tooltip" data-placement="top" title="Editar" onclick="system.projects.alEditar(event)"><i class="fa fa-pencil"></i></button>' .
-				'<button class="btn btn-info btn-details no-border b-rad-0 third-width" type="button" data-toggle="tooltip" data-placement="top" title="Detalles" onclick="system.projects.alVerDetalles(event)"><i class="fa fa-ellipsis-h"></i></button>' .
-				'<button class="btn btn-danger btn-remove no-border b-rad-0 third-width" type="button" data-toggle="tooltip" data-placement="top" title="Eliminar" onclick="system.projects.alBorrar(event)"><i class="fa fa-remove" ></i></button>' 
-			)
-		:  
-			'<button class="btn btn-info btn-details no-border b-rad-0 full-width full-height" type="button" data-toggle="tooltip" data-placement="top" title="Detalles" onclick="system.projects.alVerDetalles(event)"><i class="fa fa-ellipsis-h"></i></button>'
-	);
-	foreach (PDOProyectos::select($pdo, $limit, $page, $filters) as $proyecto) { ?>
+
+	foreach (PDOProyectos::select_proyectos_hitos_horas($pdo, $limit, $page, $filters) as $proyecto) { ?>
 		<tr data-sid="<?=$proyecto["prjID"]; ?>">
 			<td class="p-t-0 p-b-0"><?=$proyecto["prjCodigo"]; ?></td>
 			<td class="p-t-0 p-b-0"><?=$proyecto["prjNombre"]; ?></td>
@@ -38,7 +28,26 @@ function tr_proyectos($pdo = null, $limit = 100, $page = 1, $filters = []){
 			<td class="p-t-0 p-b-0" data-sid="<?=$proyecto["vprID"]; ?>"><?=$proyecto["vprNombre"]; ?></td>
 			<td class="p-t-0 p-b-0" data-sid="<?=$proyecto["gerID"]; ?>"><?=$proyecto["gerNombre"]; ?></td>
 			<td class="p-t-0 p-b-0" data-sid="<?=$proyecto["sgrID"]; ?>"><?=$proyecto["sgrNombre"]; ?></td>
-			<td class="no-border no-padding"><div class="flex-container full-height"><?=$TD_ACCIONES; ?></div></td>
+			<td class="no-border no-padding">
+				<div class="flex-container full-height">
+					<?php
+						if ($GLOBALS["esUsrJefe"]) {
+							?>
+							<button class="btn btn-primary btn-edit no-border b-rad-0 third-width" type="button" data-toggle="tooltip" data-placement="top" title="Editar" onclick="system.projects.alEditar(event, <?=$proyecto['numHitosPagados']?>,<?=$proyecto['hrsProyecto']?>)"><i class="fa fa-pencil"></i></button>
+							<button class="btn btn-info btn-details no-border b-rad-0 third-width" type="button" data-toggle="tooltip" data-placement="top" title="Detalles" onclick="system.projects.alVerDetalles(event)"><i class="fa fa-ellipsis-h"></i></button>
+							<!-- verificamos si existen hitos facturados, si hay al menos uno en el proyecto no se permite eliminar, se utiliza un operador ternario --> 
+							<button class="btn btn-danger btn-remove no-border b-rad-0 third-width" type="button" data-toggle="tooltip" data-placement="top" title="Eliminar" onclick="system.projects.alBorrar(event,<?=$proyecto['numHitosPagados']?>,<?=$proyecto['hrsProyecto']?>)"><i class="fa fa-remove"></i></button>
+							<?php
+						} else {
+							?>
+							<button class="btn btn-info btn-details no-border b-rad-0 full-width full-height" type="button" data-toggle="tooltip" data-placement="top" title="Detalles" onclick="system.projects.alVerDetalles(event)"><i class="fa fa-ellipsis-h"></i></button>
+							<?php
+						}
+					?>
+				</div>
+			</td>
+
 		</tr><?php
-	} 		        
+	}
+	 		        
 }

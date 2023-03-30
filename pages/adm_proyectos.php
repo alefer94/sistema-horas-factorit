@@ -44,7 +44,7 @@ $anchoTdAcciones = $GLOBALS["esUsrJefe"]? 9 : 6;
 					<!--<span id="btn-filtrar_facturacion" class="btn-filtrar no-margin no-padding" role="button" title="Filtrar con esta columna" data-toggle="tooltip" data-placement="bottom" onclick="system.projects.alFiltrar(event, 'facturacion')">(Todos)</span>-->
 				</th>
 				<th style="width: 7rem !important; min-width: 7rem !important;" class="no-border text-center">
-					Estados<br/>
+					Estado<br/>
 					<!--<span id="btn-filtrar_estado" class="btn-filtrar no-margin no-padding" role="button" title="Filtrar con esta columna" data-toggle="tooltip" data-placement="bottom" onclick="system.projects.alFiltrar(event, 'estado')">(Todos)</span>-->
 				</th>
 				<th style="width: 12rem !important; min-width: 12rem !important;" class="no-border text-center">
@@ -94,7 +94,7 @@ $anchoTdAcciones = $GLOBALS["esUsrJefe"]? 9 : 6;
 	<div class="clearfix"></div>
 </div>
 <script type="text/javascript">
-	function newRow(){
+	function newRow(hitos, hrsProyecto){
 		return (
 			'<td class="no-padding"><input class="form-control ipt-codigo no-border maxlength="7" b-rad-0" type="text" placeholder="..." required/></td>' +
 			'<td class="no-padding"><input class="form-control ipt-nombre no-border b-rad-0" type="text" placeholder="..." required/></td>' +
@@ -129,17 +129,18 @@ $anchoTdAcciones = $GLOBALS["esUsrJefe"]? 9 : 6;
 				'<select class="slt-subgerencias full-width"><option></option><?php options_subgerencias(new InterfazPDO());?></select>' +
 			'</td>' +
 			'<td class="no-border no-padding full-height"><div class="flex-container full-height">' +
-				'<button class="btn btn-complete btn-save no-border b-rad-0 full-height half-width" type="button" data-toggle="tooltip" data-placement="top" title="Guardar" onclick="system.projects.alGuardar(event)"><span class="fa fa-save"></span></button>' +
-				'<button class="btn btn-danger btn-remove no-border b-rad-0 full-height half-width" type="button" data-toggle="tooltip" data-placement="top" title="Eliminar" onclick="system.projects.alBorrar(event)"><span class="fa fa-remove"></span></button>' +
+				// Se mandan los hitos para que persistan después de la petición ajax, eliminar no eliminara si hay hitos facturados, update se mandan para que la vista siga haciendo la logica
+				'<button class="btn btn-complete btn-save no-border b-rad-0 full-height half-width" type="button" data-toggle="tooltip" data-placement="top" title="Guardar" onclick="system.projects.alGuardar(event,'+hitos+','+hrsProyecto+')"><span class="fa fa-save"></span></button>' +
+				'<button class="btn btn-danger btn-remove no-border b-rad-0 full-height half-width" type="button" data-toggle="tooltip" data-placement="top" title="Eliminar" onclick="system.projects.alBorrar(event,'+hitos+','+hrsProyecto+')"><span class="fa fa-remove"></span></button>' +
 			'</div></td>'
 		);
 	}
 	
-	function updatedTd(){
+	function updatedTd(hitos, hrsProyecto){
 		return (
-			'<button class="btn btn-primary btn-edit no-border b-rad-0 full-height third-width" type="button" data-toggle="tooltip" data-placement="top" title="Editar" onclick="system.projects.alEditar(event)"><i class="fa fa-pencil"></i></button>' +
+			'<button class="btn btn-primary btn-edit no-border b-rad-0 full-height third-width" type="button" data-toggle="tooltip" data-placement="top" title="Editar" onclick="system.projects.alEditar(event,'+hitos+','+hrsProyecto+')"><i class="fa fa-pencil"></i></button>' +
 			'<button class="btn btn-info btn-details no-border b-rad-0 full-height third-width" type="button" data-toggle="tooltip" data-placement="top" title="Detalles" onclick="system.projects.alVerDetalles(event)"><i class="fa fa-ellipsis-h"></i></button>' +
-			'<button class="btn btn-danger btn-remove no-border b-rad-0 full-height third-width" type="button" data-toggle="tooltip" data-placement="top" title="Eliminar" onclick="system.projects.alBorrar(event)"><i class="fa fa-remove" ></i></button>' 
+			'<button class="btn btn-danger btn-remove no-border b-rad-0 full-height third-width" type="button" data-toggle="tooltip" data-placement="top" title="Eliminar" onclick="system.projects.alBorrar(event,'+hitos+','+hrsProyecto+')"><i class="fa fa-remove" ></i></button>' 
 		);
 	}
 </script>

@@ -71,6 +71,83 @@ abstract class PDOProyectos{
 			throw new Exception("Fallo al validar los parámetros.");
 		}
     }
+
+		// Esta función selecciona proyectos facturados y horas del prouecto en base a ciertos filtros
+    public function select_proyectos_hitos_horas($pdo = null, $limit = 150, $page = 1, $filters = []){
+		 // Validación de los parámetros recibidos
+		if (is_object($pdo) && get_class($pdo)==="InterfazPDO" &&
+			is_numeric($limit) && $limit >= 0 &&
+			is_numeric($page) && $page > 0 &&
+			is_array($filters)){
+			 // Construcción de la consulta SQL			
+			 $query = 
+			 "SELECT 
+				P.prjID, 
+				P.prjNombre, 
+				P.prjCodigo, 
+				P.prjHorasEstimadas,
+				P.prjDescripcion,
+				P.prjFechaInicio, 
+				P.prjFechaTerminoEst, 
+				P.prjFechaTermino,
+				P.prjFechaTerminoDes, 
+				P.prjFlagFacturacion, 
+				P.prjEstadoProyecto, 
+				P.prjFlagAutoComercial, 
+				P.prjNombreAutoComercial, 
+				P.prjFechaAutoComercial,
+				P.prjBonos,
+				P.prjProveedor,
+				P.prjFreelance,
+				P.prjInterno,          
+				P.cltID, 
+				P.prjCostoVenta,
+				P.prjMargenEsperado,
+				P.prjCodigoPadre,
+				(SELECT cltNombre FROM clientes C WHERE C.cltID = P.cltID) AS 'cltNombre', 
+				P.usrIDJefe,
+				(SELECT usrNombre FROM usuarios U WHERE U.usrID = P.usrIDJefe) AS 'usrNombreJefe',
+				P.ccoID,
+				(SELECT ccoNombre FROM centro_costos CC WHERE CC.ccoID = P.ccoID) AS 'ccoNombre',
+				P.vprID,
+				(SELECT vprNombre FROM  vicepresidencias VP WHERE VP.vprID = P.vprID) AS 'vprNombre',  
+				P.gerID, 
+				(SELECT gerNombre FROM gerencias G WHERE G.gerID = P.gerID) AS 'gerNombre',
+				P.sgrID, 
+				(SELECT sgrNombre FROM subgerencias SG WHERE SG.sgrID = P.sgrID) AS 'sgrNombre',
+				P.usrIDComercial,
+				(SELECT usrNombre FROM usuarios U WHERE U.usrID = P.usrIDComercial) AS 'usrNombreComercial',
+				(SELECT COUNT(*) FROM proyectos_hitos PH WHERE PH.prjID = P.prjID AND PH.htEstID = 6) AS 'numHitosPagados',
+				(
+						SELECT COALESCE( 
+							SUM(hrDia1) + SUM(hrDia2) + SUM(hrDia3) + SUM(hrDia4) + SUM(hrDia5) +
+							SUM(hrDia6) + SUM(hrDia7) + SUM(hrDia8) + SUM(hrDia9) + SUM(hrDia10) +
+							SUM(hrDia11) + SUM(hrDia12) + SUM(hrDia13) + SUM(hrDia14) + SUM(hrDia15) +
+							SUM(hrDia16) + SUM(hrDia17) + SUM(hrDia18) + SUM(hrDia19) + SUM(hrDia20) +
+							SUM(hrDia21) + SUM(hrDia22) + SUM(hrDia23) + SUM(hrDia24) + SUM(hrDia25) +
+							SUM(hrDia26) + SUM(hrDia27) + SUM(hrDia28) + SUM(hrDia29) + SUM(hrDia30) + SUM(hrDia31)
+						,0) FROM horas H WHERE H.prjID = P.prjID
+						UNION SELECT 0
+						LIMIT 1
+					) AS hrsProyecto
+		 	FROM proyectos P";
+			// Conversión de los filtros recibidos en un string que represente las condiciones SQL
+			$condition_clause = pdo_filters_array_to_string($filters);
+			
+
+			 // Clausula ORDER BY para ordenar los resultados por el ID del proyecto en orden descendente
+			$order_by_clause = "ORDER BY prjID DESC";
+			  // Clausula LIMIT para paginar los resultados
+			$limit_clause = "LIMIT ".($page-1)*$limit.",".$limit;
+			
+			// Ejecutar la consulta y devolver los resultados
+			return $pdo->query($query." ".(is_null($condition_clause)? "" : $condition_clause." ").$order_by_clause." ".$limit_clause);
+		}
+		else {
+			 // Lanzar excepción en caso de que los parámetros no sean válidos
+			throw new Exception("Fallo al validar los parámetros.");
+		}
+    }
     
     public function select_from_user($pdo = null, $usrID = 0){
         if (is_object($pdo) && get_class($pdo)==="InterfazPDO" &&

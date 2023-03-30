@@ -45,19 +45,21 @@ function detalle_proyecto_hitos($pdo = null, $usrID = 0, $prjID = 0){
 					foreach (PDOProyectos::select_hitos($pdo, intval($proyecto["prjID"])) as $hito) {
 						if ($esJefe) { 
 					  ?><tr data-sid="<?=$hito["htID"];?>"><?php
-						  ?><td class="no-padding"><input class="form-control ipt-hito_desc b-rad-0 no-border" type="text" placeholder="..." value="<?=$hito["htDescripcion"];?>" required/></td><?php
-						  ?><td class="no-padding"><input class="form-control ipt-hito_fch_trm b-rad-0 no-border text-center full-width btn" type="date" value="<?=$hito["htFechaTermino"];?>" /></td><?php
-						  ?><td class="no-padding"><input class="form-control ipt-hito_fch_prov b-rad-0 no-border text-center full-width btn" type="date" value="<?=$hito["htFechaProvision"];?>" /></td><?php
-						  ?><td class="no-padding"><input class="form-control ipt-hito_fch_conf b-rad-0 no-border text-center full-width btn" type="date" value="<?=$hito["htFechaConformidad"];?>" /></td><?php
-						  ?><td class="no-padding"><input class="form-control ipt-hito_uf b-rad-0 no-border text-center full-width" type="number" placeholder="0" min="0" step="0.01" value="<?=$hito["htUF"];?>" /></td><?php
+							//solo van a estar habilitados los que no esten facturados a través de un operador ternario que verifica esta condición
+						  ?><td class="no-padding"><input class="form-control ipt-hito_desc b-rad-0 no-border" type="text" placeholder="..." value="<?=$hito["htDescripcion"];?>" required /></td><?php
+						  ?><td class="no-padding"><input class="form-control ipt-hito_fch_trm b-rad-0 no-border text-center full-width btn" type="date" value="<?=$hito["htFechaTermino"];?>" required  /></td><?php
+						  ?><td class="no-padding"><input class="form-control ipt-hito_fch_prov b-rad-0 no-border text-center full-width btn" type="date" value="<?=$hito["htFechaProvision"];?>" required/></td><?php
+						  ?><td class="no-padding"><input class="form-control ipt-hito_fch_conf b-rad-0 no-border text-center full-width btn" type="date" value="<?=$hito["htFechaConformidad"];?>" required/></td><?php
+						  ?><td class="no-padding"><input class="form-control ipt-hito_uf b-rad-0 no-border text-center full-width" type="number" placeholder="0" min="0" step="0.01" value="<?=$hito["htUF"];?>" required/></td><?php
 						  ?><td class="no-border no-padding">
-						  <select class="slt-moneda full-width"><option></option><?php options_monedas(new InterfazPDO(),$hito["monID"]); ?></select> 
+						  <select class="slt-moneda full-width" required><option></option><?php options_monedas(new InterfazPDO(),$hito["monID"]); ?></select> 
 					  	  </td><?php
 						  ?><td class="no-border no-padding">
-						  <select class="slt-est_hit full-width"><option></option><?php options_estados_hitos(new InterfazPDO(),$hito["htEstID"]); ?></select> 
+						  <select class="slt-est_hit full-width" required><option></option><?php options_estados_hitos(new InterfazPDO(),$hito["htEstID"]); ?></select> 
 						  </td><?php
-						  ?><td class="no-padding"><div class="input-group full-width no-padding"><input class="form-control ipt-hito_fact b-rad-0 no-border text-center" type="text" placeholder="..."  value="<?=$hito["htFactura"];?>"/></div></td><?php
+						  ?><td class="no-padding"><div class="input-group full-width no-padding"><input class="form-control ipt-hito_fact b-rad-0 no-border text-center" type="text" placeholder="..."  value="<?=$hito["htFactura"];?>" /></div></td><?php
 						  ?><td class="no-padding"><div class="input-group full-width no-padding"><input class="form-control ipt-hito_fch_fact b-rad-0 no-border text-center" type="text" placeholder="..."  value="<?=$hito["htFechaFacturacion"];?>"/></div></td><?php
+						//   nos aseguramos en el if de ver si es factura, de ser así deshabilitamos el button de eliminar, en caso contrario estará habilitado
 						  ?><td class="no-padding no-border full-height"><button class="btn btn-danger btn-remove_hito no-border b-rad-0 full-height full-width" type="button" onclick="system.project_details.hitos.alQuitar(event)"><i class="fa fa-remove" ></i></button></td><?php
 						 
 						} 
@@ -91,23 +93,25 @@ function detalle_proyecto_hitos($pdo = null, $usrID = 0, $prjID = 0){
 	function newHitoRow(){
 		return (
 			'<td class="no-padding"><input class="form-control ipt-hito_desc b-rad-0 no-border" type="text" placeholder="..." required/></td>'+
-			'<td class="no-padding"><input class="form-control ipt-hito_fch_trm b-rad-0 no-border text-center full-width btn" type="date"/></td>'+
-			'<td class="no-padding"><input class="form-control ipt-hito_fch_prov b-rad-0 no-border text-center full-width btn" type="date"/></td>'+
-			'<td class="no-padding"><input class="form-control ipt-hito_fch_conf b-rad-0 no-border text-center full-width btn" type="date"/></td>'+
+			'<td class="no-padding"><input class="form-control ipt-hito_fch_trm b-rad-0 no-border text-center full-width btn" type="date" required/></td>'+
+			'<td class="no-padding"><input class="form-control ipt-hito_fch_prov b-rad-0 no-border text-center full-width btn" type="date" required/></td>'+
+			'<td class="no-padding"><input class="form-control ipt-hito_fch_conf b-rad-0 no-border text-center full-width btn" type="date" required/></td>'+
 			// '<td class="no-padding"><div class="input-group full-width no-padding"><input class="form-control ipt-hito_pct b-rad-0 no-border text-center" type="number" placeholder="0" min="0" max="100"/><span class="input-group-addon no-border b-rad-0">%</span></div></td>'+
-			'<td class="no-padding"><input class="form-control ipt-hito_uf b-rad-0 no-border text-center full-width" type="number" min="0" step="0.01" placeholder="0"/></td>'+
+			'<td class="no-padding"><input class="form-control ipt-hito_uf b-rad-0 no-border text-center full-width" type="number" min="0" step="0.01" placeholder="0" required/></td>'+
 			'<td class="no-border no-padding">' +
-				'<select class="slt-moneda full-width"><option></option><?php options_monedas(new InterfazPDO()); ?></select>' +
+				'<select class="slt-moneda full-width"><option></option required><?php options_monedas(new InterfazPDO()); ?></select>' +
 			'</td>' +
 			'<td class="no-border no-padding">' +
-				'<select class="slt-est_hit full-width"><option></option><?php options_estados_hitos(new InterfazPDO()); ?></select>' +
+				'<select class="slt-est_hit full-width"><option></option required><?php options_estados_hitos(new InterfazPDO()); ?></select>' +
 			'</td>' +
 			'<td class="no-padding"><div class="input-group full-width no-padding"><input class="form-control ipt-hito_fact b-rad-0 no-border text-center" type="text" placeholder="..."/></div></td>'+
 			'<td class="no-padding"><div class="input-group full-width no-padding"><input class="form-control ipt-hito_fch_fact b-rad-0 no-border text-center" type="text" placeholder="..."/></div></td>'+
 			'<td class="no-border no-padding full-height"><div class="no-padding full-width full-height"><button class="btn btn-danger btn-remove_hito b-rad-0 no-border full-height full-width" type="button" onclick="system.project_details.hitos.alQuitar(event)"><i class="fa fa-remove" ></i></button></td>'
 		);
 	}
+
 </script>
 <script src="js/detalle_proyecto_hitos.js" type="text/javascript"></script>
+<script src="js/validar_hitos.js" type="text/javascript"></script>
 <?php
 }

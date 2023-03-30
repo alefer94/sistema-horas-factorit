@@ -1,0 +1,1 @@
+C:\Xampp\php\php.exe -f ".\htdocs\gestion_horas_testing\conm\checkCurrentHoras.php" 

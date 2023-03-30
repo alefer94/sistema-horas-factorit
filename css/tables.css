@@ -1,0 +1,47 @@
+tbody > tr,
+tbody > tr > td,
+tr button,
+tr input {
+	height: 2.5rem !important;
+}
+
+tbody > tr,
+tbody > tr > td {
+    padding: 0px 1rem !important;
+}
+
+tr button,
+tr input,
+tr .btn {
+    border-width: 0px !important;
+    border-radius: 0px !important;
+    -moz-border-radius: 0px !important;
+    -webkit-border-radius: 0px !important;
+    margin: none !important;
+}
+
+thead.bg-warning-light,
+.thead-warning-light {
+	height: 4rem !important;
+}
+.thead-warning-light,
+.thead-warning-light {
+	color: rgba(44, 44, 44, 0.35) !important;
+	font-weight: bold !important;
+	text-transform: uppercase !important;
+	font-family: 'Montserrat' !important;
+}
+thead.bg-warning-light *[role=button]:hover,
+.thead-warning-light *[role=button]:hover {
+	color: rgba(44, 44, 44, 0.7) !important;
+}
+
+thead.bg-info-light, 
+thead.bg-info-light tr {
+	padding-top: 0.25rem !important;
+	padding-bottom: 0.25rem !important;
+}
+thead.bg-info-light th {
+	padding-top: 0.5rem !important;
+	padding-bottom: 0.5rem !important;
+}

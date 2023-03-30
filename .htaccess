@@ -1,0 +1,35 @@
+RewriteEngine on
+
+
+
+RewriteRule ^ver_proyecto$		pages/detalles_proyecto.php
+RewriteRule ^ver_usuario$		pages/detalles_usuario.php
+
+RewriteRule ^login$      login.php
+RewriteRule ^logout$     logout.php
+
+RewriteRule ^inicio$			index.php
+RewriteRule ^mis_horas$			index.php
+RewriteRule ^adm_calendario$	index.php
+RewriteRule ^adm_clientes$		index.php
+RewriteRule ^adm_proyectos		index.php
+RewriteRule ^adm_usuarios$		index.php
+RewriteRule ^preferencias$		index.php
+
+RewriteRule ^login.php$						- [L]
+RewriteRule ^logout.php$					- [L]
+RewriteRule ^pages/detalles_proyecto.php$	- [L]
+RewriteRule ^pages/detalles_usuario.php$	- [L]
+RewriteRule ^pages/user_opciones.php$		- [L]
+RewriteRule ^pages/tabla_feriados.php$		- [L]
+RewriteRule ^index.php$						- [L]
+
+RewriteRule ^img\/.+\.(png|jpg|svg)$     								- [L]
+RewriteRule ^css\/.+\.css$           									- [L]
+RewriteRule ^ajax\/.+\.php$    		 									- [L]
+RewriteRule ^snippets\/.+\.php$    		 								- [L]
+RewriteRule ^js\/.+\.js$             									- [L]
+RewriteRule ^fonts\/.+\.(eot|svg|ttf|woff|woff2)$           			- [L]
+RewriteRule ^plugins\/.+\.(js|css|eot|svg|ttf|woff|woff2|otf|gif|png)$  - [L]
+
+RewriteRule ^.+$ /factorit_gestion_horas/index.php [L]
